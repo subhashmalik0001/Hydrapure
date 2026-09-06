@@ -1,0 +1,49 @@
+{
+  "name": "hydrapure-backend",
+  "version": "1.0.0",
+  "description": "Enterprise Backend for HydraPure Smart Water Purification & IoT Monitoring System",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node tests/test-runner.js",
+    "test:vitest": "vitest run",
+    "test:watch": "vitest",
+    "seed": "node supabase/seed/seedRunner.js",
+    "migrate": "node supabase/migrations/migrateRunner.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "socket.io": "^4.8.1",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.17.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0",
+    "vitest": "^3.0.7"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "iot",
+    "water-purification",
+    "hydrapure",
+    "supabase",
+    "express",
+    "realtime"
+  ],
+  "author": "HydraPure Engineering Team",
+  "license": "ISC"
+}

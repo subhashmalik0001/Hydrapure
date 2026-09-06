@@ -1,11 +1,11 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { AppProvider } from '@/lib/context/AppContext'
+import AppShell from '@/components/layout/AppShell'
 
 export const metadata: Metadata = {
-  title: 'Hydrapure | Smart Water Monitoring',
-  description: 'Production-grade water purification and quality monitoring across Jharkhand.',
-  generator: 'v0.app',
+  title: 'Hydrapure | Smart Water Monitoring & Purification Platform',
+  description: 'Production-grade water purification and IoT quality monitoring across Jharkhand.',
 }
 
 export const viewport: Viewport = {
@@ -15,5 +15,16 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className="bg-[#edf2f6]"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
+  return (
+    <html lang="en" className="bg-[#edf2f6]">
+      <body className="antialiased">
+        <AppProvider>
+          <AppShell>
+            {children}
+          </AppShell>
+        </AppProvider>
+      </body>
+    </html>
+  )
 }
+
