@@ -15,3 +15,5 @@ backend/.env
 node_modules
 .next/
 .DS_Store
+*.mp4
+*.tsbuildinfo
