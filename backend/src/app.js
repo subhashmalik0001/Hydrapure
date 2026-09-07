@@ -27,10 +27,16 @@ app.use(
       const allowedOrigins = Array.isArray(env.CORS_ORIGINS) 
         ? env.CORS_ORIGINS 
         : (env.CORS_ORIGINS || '').split(',').map((o) => o.trim());
-      if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      if (
+        allowedOrigins.includes('*') || 
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.onrender.com') ||
+        origin.includes('localhost')
+      ) {
         return callback(null, true);
       }
-      return callback(null, true); // Permissive in development
+      return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

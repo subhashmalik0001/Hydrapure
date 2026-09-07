@@ -2,7 +2,7 @@ import type { WaterStation, Alert, StationStatus, QualityStatus, Connectivity } 
 import { stations as fallbackStations } from '@/lib/data/stations';
 import { alerts as fallbackAlerts } from '@/lib/data/alerts';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5050/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://hydrapure.onrender.com/api/v1';
 
 // Format helper for relative/readable time
 function formatTimestamp(isoString?: string): string {
