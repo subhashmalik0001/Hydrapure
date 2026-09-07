@@ -1,16 +1,14 @@
 // Fix Node 25 experimental web storage SSR bug
-if (typeof globalThis.localStorage !== 'undefined' && typeof globalThis.localStorage.getItem !== 'function') {
+// Use property descriptor check to avoid triggering the getter (which emits a warning)
+const _lsDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
+if (_lsDescriptor) {
   try {
     delete globalThis.localStorage;
-  } catch (e) {
-    globalThis.localStorage = {
-      getItem: () => null,
-      setItem: () => {},
-      removeItem: () => {},
-      clear: () => {},
-      key: () => null,
-      length: 0,
-    };
+  } catch (_) {
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {}, key: () => null, length: 0 },
+      configurable: true, writable: true,
+    });
   }
 }
 
