@@ -18,6 +18,7 @@ hydra-pure-dashboard/
 │   ├── app/                 # Next.js 15 pages and layouts (App Router)
 │   │   ├── alerts/          # Real-time water quality and station alerts
 │   │   ├── map/             # Interactive geographic map of monitoring stations
+│   │   ├── pitch/           # Executive pitch video & platform demonstration
 │   │   ├── quality/         # Chemical, physical, and microbial water analytics
 │   │   ├── reports/         # Compliance reports and batch export
 │   │   ├── settings/        # System configuration and sensor thresholds

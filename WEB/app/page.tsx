@@ -16,6 +16,7 @@ import {
   Droplets,
   Eye,
   SlidersHorizontal,
+  Presentation,
 } from 'lucide-react'
 import { useApp } from '@/lib/context/AppContext'
 import { districts } from '@/lib/data/districts'
@@ -153,6 +154,22 @@ export default function DashboardPage() {
           <span className="online">
             <i /> System Online
           </span>
+          <Link
+            href="/pitch"
+            className="export-button"
+            style={{
+              background: '#155e75',
+              color: '#ffffff',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              textDecoration: 'none',
+              fontWeight: 600,
+            }}
+          >
+            <Presentation size={14} />
+            <span>Pitch Video</span>
+          </Link>
           <button className="export-button" onClick={syncData} disabled={isSyncing}>
             <RefreshCw className={isSyncing ? 'spinning' : ''} size={14} />
             {isSyncing ? 'Syncing...' : 'Sync data'}

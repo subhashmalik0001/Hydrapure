@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, MapPin, Activity, Bell, FileText, Map, Settings,
-  CircleHelp, MessageSquare, ChevronDown,
+  CircleHelp, MessageSquare, ChevronDown, Presentation,
 } from 'lucide-react'
 import { useApp } from '@/lib/context/AppContext'
 import type { UserRole } from '@/lib/types'
@@ -19,6 +19,7 @@ interface NavEntry {
 
 const mainNav: NavEntry[] = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/', roles: ['admin', 'operator', 'technician'] },
+  { icon: Presentation, label: 'Pitch & Demo', href: '/pitch', roles: ['admin', 'operator', 'technician'] },
   { icon: MapPin, label: 'Water Stations', href: '/stations', roles: ['admin', 'operator', 'technician'] },
   { icon: Activity, label: 'Water Quality', href: '/quality', roles: ['admin', 'operator'] },
   { icon: Bell, label: 'Alerts', href: '/alerts', roles: ['admin', 'operator', 'technician'] },
