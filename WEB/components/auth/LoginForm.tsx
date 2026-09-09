@@ -58,6 +58,45 @@ export function LoginForm() {
 
       {error && <AuthError message={error} onDismiss={() => setError(null)} />}
 
+      {/* Demo Accounts Quick-Fill Panel */}
+      <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 space-y-2.5">
+        <div className="flex items-center justify-between font-mono text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+          <span className="flex items-center space-x-1.5 text-cyan-400">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>Quick Demo Accounts</span>
+          </span>
+          <span className="text-[10px] text-slate-500 font-sans">Click to Auto-fill</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-mono text-xs">
+          <button
+            type="button"
+            onClick={() => {
+              setEmail('admin@gmail.com')
+              setPassword('123456')
+              setError(null)
+            }}
+            className="p-2.5 rounded-lg bg-slate-800/80 hover:bg-[#021BFE]/20 hover:border-[#021BFE]/50 border border-slate-700/60 text-left transition-all group"
+          >
+            <div className="font-semibold text-slate-200 group-hover:text-cyan-300">admin@gmail.com</div>
+            <div className="text-[10px] text-slate-400">Pass: <span className="text-emerald-400">123456</span> • Super Admin</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEmail('admin@hydrapure.gov.in')
+              setPassword('Password123!')
+              setError(null)
+            }}
+            className="p-2.5 rounded-lg bg-slate-800/80 hover:bg-[#021BFE]/20 hover:border-[#021BFE]/50 border border-slate-700/60 text-left transition-all group"
+          >
+            <div className="font-semibold text-slate-200 group-hover:text-cyan-300">admin@hydrapure.gov.in</div>
+            <div className="text-[10px] text-slate-400">Pass: <span className="text-emerald-400">Password123!</span> • Director</div>
+          </button>
+        </div>
+      </div>
+
       <div className="space-y-1.5">
         <label htmlFor="login-email" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
           Work Email
