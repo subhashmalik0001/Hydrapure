@@ -1,8 +1,26 @@
 import type { WaterStation, Alert, StationStatus, QualityStatus, Connectivity } from '@/lib/types';
 import { stations as fallbackStations } from '@/lib/data/stations';
 import { alerts as fallbackAlerts } from '@/lib/data/alerts';
+import { getAccessToken, clearSession } from '@/lib/auth/session';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://hydrapure.onrender.com/api/v1';
+
+/** Build headers with optional Authorization token */
+function authHeaders(extra?: Record<string, string>): Record<string, string> {
+  const token = getAccessToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...extra,
+  };
+}
+
+/** If a response is 401, clear local session so middleware redirects to login */
+function handle401(res: Response): void {
+  if (res.status === 401) {
+    clearSession();
+  }
+}
 
 // Format helper for relative/readable time
 function formatTimestamp(isoString?: string): string {
@@ -102,10 +120,10 @@ export function mapBackendAlertToFrontend(a: any, index: number): Alert {
 export async function getStationsApi(): Promise<{ stations: WaterStation[]; isLive: boolean }> {
   try {
     const res = await fetch(`${API_BASE_URL}/stations?limit=50`, {
-      headers: { 'Content-Type': 'application/json' },
-      next: { revalidate: 10 },
+      headers: authHeaders(),
       signal: AbortSignal.timeout(4000),
     });
+    handle401(res);
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const body = await res.json();
     const data = body.data || [];
@@ -124,10 +142,10 @@ export async function getStationsApi(): Promise<{ stations: WaterStation[]; isLi
 export async function getAlertsApi(): Promise<{ alerts: Alert[]; isLive: boolean }> {
   try {
     const res = await fetch(`${API_BASE_URL}/alerts?limit=50`, {
-      headers: { 'Content-Type': 'application/json' },
-      next: { revalidate: 10 },
+      headers: authHeaders(),
       signal: AbortSignal.timeout(4000),
     });
+    handle401(res);
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const body = await res.json();
     const data = body.data || [];
@@ -163,10 +181,11 @@ export async function resolveAlertApi(alertId: string, resolutionNotes: string):
   try {
     const res = await fetch(`${API_BASE_URL}/alerts/${alertId}/resolve`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ resolution_notes: resolutionNotes }),
       signal: AbortSignal.timeout(4000),
     });
+    handle401(res);
     return res.ok;
   } catch (err) {
     console.error('[ApiClient] Error resolving alert:', err);

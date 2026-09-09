@@ -4,120 +4,98 @@ import { auditRepository } from '../repositories/audit.repository.js';
 import { AuthenticationError, ValidationError, ConflictError } from '../utils/errors.js';
 import { env } from '../config/env.js';
 
+// Fields users can never update via self-service
+const PROTECTED_FIELDS = ['role', 'is_active', 'auth_user_id', 'id', 'created_at'];
+const UPDATABLE_PROFILE_FIELDS = ['full_name', 'phone', 'avatar_url'];
+
 export class AuthService {
   /**
    * Login with email and password via Supabase Auth
    */
-  async login(firstArg, secondArg) {
-    let email, password;
-    if (typeof firstArg === 'object' && firstArg !== null) {
-      email = firstArg.email;
-      password = firstArg.password;
-    } else {
-      email = firstArg;
-      password = secondArg;
-    }
-
+  async login({ email, password }) {
     if (!email || !password) {
       throw new ValidationError('Email and password are required');
     }
 
-    let authUser = null;
-    let session = null;
-
-    if (!env.SUPABASE_URL.includes('mock-proj')) {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error || !data.user) {
-        throw new AuthenticationError(error?.message || 'Invalid email or password');
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error || !data.user) {
+      if (error?.message?.toLowerCase().includes('confirm')) {
+        throw new AuthenticationError('Please verify your email before logging in. Check your inbox for the verification link.');
       }
-      authUser = data.user;
-      session = data.session;
-    } else {
-      // Mock development fallback
-      const profile = await userRepository.findByEmail(email);
-      if (!profile) {
-        throw new AuthenticationError('Invalid credentials');
-      }
-
-      // Check password in development mode
-      const validPasswords = ['Password123!', 'Admin@123456', 'Password@123', 'OperatorPass@123'];
-      if (!validPasswords.includes(password) && !password.startsWith('Pass')) {
-        throw new AuthenticationError('Invalid email or password');
-      }
-
-      authUser = { id: profile.auth_user_id || profile.id, email: profile.email };
-      session = {
-        access_token: `mock_jwt_token_${profile.id}_${Date.now()}`,
-        refresh_token: `mock_refresh_${Date.now()}`,
-        expires_in: 3600,
-        token_type: 'bearer',
-      };
+      throw new AuthenticationError('Email or password is incorrect');
     }
 
-    // Fetch user profile from public.profiles table
+    const authUser = data.user;
+    const session = data.session;
+
+    // Fetch profile from public.profiles table
     let profile = await userRepository.findByAuthId(authUser.id);
     if (!profile) {
       profile = await userRepository.findByEmail(authUser.email);
     }
 
-    await auditRepository.log({
-      userId: profile?.id,
-      action: 'USER_LOGIN',
+    if (!profile) {
+      throw new AuthenticationError('Account profile not found. Please contact an administrator.');
+    }
+
+    if (!profile.is_active) {
+      throw new AuthenticationError('Your account is currently inactive. Contact an administrator.');
+    }
+
+    // Update last_login_at (best-effort, non-blocking)
+    userRepository.updateLastLogin(profile.id).catch(() => {});
+
+    auditRepository.log({
+      userId: profile.id,
+      action: 'LOGIN_SUCCESS',
       entityType: 'AUTH',
       entityId: authUser.id,
-    });
+    }).catch(() => {});
 
     return {
-      token: session?.access_token,
       user: {
-        id: profile?.id || authUser.id,
+        id: profile.id,
         email: authUser.email,
-        fullName: profile?.full_name || 'HydraPure User',
-        role: profile?.role || 'VIEWER',
-        district: profile?.district || null,
-        block: profile?.block || null,
-        phone: profile?.phone || null,
+        fullName: profile.full_name,
+        role: profile.role,
+        district: profile.district || null,
+        block: profile.block || null,
+        phone: profile.phone || null,
+        isActive: profile.is_active,
+        avatarUrl: profile.avatar_url || null,
       },
       session: {
-        accessToken: session?.access_token,
-        refreshToken: session?.refresh_token,
-        expiresIn: session?.expires_in,
+        accessToken: session.access_token,
+        refreshToken: session.refresh_token,
+        expiresIn: session.expires_in,
+        expiresAt: session.expires_at,
+        tokenType: session.token_type,
       },
     };
   }
 
   /**
-   * User Signup
+   * User Registration — always creates VIEWER role by default (admin promotes via admin panel)
    */
   async signup({ email, password, fullName, phone, district, block }) {
     const existing = await userRepository.findByEmail(email);
     if (existing) {
-      throw new ConflictError('A user with this email already exists');
+      throw new ConflictError('An account with this email already exists');
     }
 
-    let authUserId = null;
-    if (!env.SUPABASE_URL.includes('mock-proj')) {
-      const { data, error } = await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-        user_metadata: { full_name: fullName },
-      });
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: false, // User must verify email
+      user_metadata: { full_name: fullName },
+    });
 
-      if (error || !data.user) {
-        throw new ValidationError(error?.message || 'Failed to create auth user');
-      }
-      authUserId = data.user.id;
-    } else {
-      authUserId = `auth-${Date.now()}`;
+    if (error || !data.user) {
+      throw new ValidationError(error?.message || 'Failed to create account');
     }
 
     const profile = await userRepository.createProfile({
-      auth_user_id: authUserId,
+      auth_user_id: data.user.id,
       email,
       full_name: fullName,
       phone: phone || null,
@@ -126,12 +104,30 @@ export class AuthService {
       role: 'VIEWER',
     });
 
+    // Resend verification email
+    supabaseClient.auth.resend({ type: 'signup', email }).catch(() => {});
+
+    auditRepository.log({
+      userId: profile.id,
+      action: 'SIGNUP',
+      entityType: 'AUTH',
+      entityId: data.user.id,
+    }).catch(() => {});
+
     return {
-      message: 'Account created successfully',
-      user: profile,
+      message: 'Account created. Please check your email to verify your account.',
+      user: {
+        id: profile.id,
+        email: profile.email,
+        fullName: profile.full_name,
+        role: profile.role,
+      },
     };
   }
 
+  /**
+   * Alias for signup to support older controller calls
+   */
   async register(userData) {
     return this.signup({
       ...userData,
@@ -140,14 +136,159 @@ export class AuthService {
   }
 
   /**
-   * Get current authenticated profile
+   * Refresh access token using a valid refresh token
+   */
+  async refreshToken(refreshToken) {
+    if (!refreshToken) {
+      throw new ValidationError('Refresh token is required');
+    }
+
+    const { data, error } = await supabaseClient.auth.refreshSession({ refresh_token: refreshToken });
+    if (error || !data.session) {
+      throw new AuthenticationError('Session expired. Please log in again.');
+    }
+
+    return {
+      accessToken: data.session.access_token,
+      refreshToken: data.session.refresh_token,
+      expiresIn: data.session.expires_in,
+      expiresAt: data.session.expires_at,
+      tokenType: data.session.token_type,
+    };
+  }
+
+  /**
+   * Logout — invalidate Supabase session server-side
+   */
+  async logout(accessToken) {
+    try {
+      if (accessToken) {
+        const { data: userData } = await supabaseClient.auth.getUser(accessToken);
+        if (userData?.user?.id) {
+          await supabaseAdmin.auth.admin.signOut(userData.user.id);
+          auditRepository.log({
+            userId: null,
+            action: 'LOGOUT',
+            entityType: 'AUTH',
+            entityId: userData.user.id,
+          }).catch(() => {});
+        }
+      }
+    } catch (_) {
+      // Always succeed on logout — swallow backend errors
+    }
+    return { logged_out: true };
+  }
+
+  /**
+   * Send password reset email — never reveals if the email exists (security best practice)
+   */
+  async forgotPassword(email) {
+    try {
+      const redirectUrl = `${env.FRONTEND_URL || 'https://hydrapure.vercel.app'}/reset-password`;
+      await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
+      auditRepository.log({
+        userId: null,
+        action: 'PASSWORD_RESET_REQUEST',
+        entityType: 'AUTH',
+        entityId: email,
+      }).catch(() => {});
+    } catch (_) {
+      // Swallow — never leak whether an email exists
+    }
+
+    return {
+      message: "If an account exists for this email, you'll receive a reset link shortly.",
+    };
+  }
+
+  /**
+   * Reset password using the access token from the email link
+   */
+  async resetPassword(accessToken, newPassword) {
+    if (!newPassword || newPassword.length < 8) {
+      throw new ValidationError('Password must be at least 8 characters');
+    }
+
+    // Verify the token and get the user it belongs to
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(accessToken);
+    if (userError || !userData?.user) {
+      throw new AuthenticationError('Reset link is invalid or has expired. Please request a new one.');
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(userData.user.id, {
+      password: newPassword,
+    });
+
+    if (error) {
+      throw new ValidationError(error.message || 'Failed to reset password');
+    }
+
+    auditRepository.log({
+      userId: null,
+      action: 'PASSWORD_RESET_SUCCESS',
+      entityType: 'AUTH',
+      entityId: userData.user.id,
+    }).catch(() => {});
+
+    return { message: 'Password updated successfully. You can now sign in.' };
+  }
+
+  /**
+   * Get current authenticated user profile
    */
   async getCurrentUser(authUserId) {
     const profile = await userRepository.findByAuthId(authUserId);
     if (!profile) {
-      throw new AuthenticationError('Profile not found for authenticated user');
+      throw new AuthenticationError('Profile not found');
     }
-    return profile;
+    return {
+      id: profile.id,
+      email: profile.email,
+      fullName: profile.full_name,
+      role: profile.role,
+      district: profile.district || null,
+      block: profile.block || null,
+      phone: profile.phone || null,
+      isActive: profile.is_active,
+      avatarUrl: profile.avatar_url || null,
+      lastLoginAt: profile.last_login_at || null,
+      createdAt: profile.created_at,
+    };
+  }
+
+  /**
+   * Update own profile — protected fields (role, is_active) can never be changed here
+   */
+  async updateProfile(profileId, updates) {
+    const filteredUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([key]) => UPDATABLE_PROFILE_FIELDS.includes(key))
+    );
+
+    if (Object.keys(filteredUpdates).length === 0) {
+      throw new ValidationError('No valid fields provided to update');
+    }
+
+    const updated = await userRepository.updateProfile(profileId, filteredUpdates);
+    return {
+      id: updated.id,
+      email: updated.email,
+      fullName: updated.full_name,
+      phone: updated.phone || null,
+      avatarUrl: updated.avatar_url || null,
+    };
+  }
+
+  /**
+   * Resend email verification link
+   */
+  async resendVerification(email) {
+    try {
+      await supabaseClient.auth.resend({ type: 'signup', email });
+    } catch (_) {
+      // Swallow
+    }
+    return { message: 'If your account is unverified, a new verification email has been sent.' };
   }
 }
 

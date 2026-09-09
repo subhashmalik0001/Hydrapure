@@ -78,9 +78,10 @@ async function runTests() {
         password: 'Password123!',
       });
     assert(loginRes.status === 200, 'POST /api/v1/auth/login succeeds for default admin');
-    assert(!!loginRes.body.data.token, 'Auth response returns session token');
+    const token = loginRes.body.data?.session?.accessToken || loginRes.body.data?.token;
+    assert(!!token, 'Auth response returns session token');
     assert(loginRes.body.data.user.role === 'SUPER_ADMIN', 'Admin user has SUPER_ADMIN role');
-    adminToken = loginRes.body.data.token;
+    adminToken = token;
 
     const badLoginRes = await request(app)
       .post('/api/v1/auth/login')

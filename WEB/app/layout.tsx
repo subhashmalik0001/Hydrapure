@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { AppProvider } from '@/lib/context/AppContext'
-import AppShell from '@/components/layout/AppShell'
+import { AuthProvider } from '@/lib/context/AuthContext'
+import ConditionalShell from '@/components/layout/ConditionalShell'
 
 export const metadata: Metadata = {
   title: 'Hydrapure | Smart Water Monitoring & Purification Platform',
@@ -18,13 +19,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="bg-[#edf2f6]">
       <body className="antialiased">
-        <AppProvider>
-          <AppShell>
-            {children}
-          </AppShell>
-        </AppProvider>
+        <AuthProvider>
+          <AppProvider>
+            <ConditionalShell>
+              {children}
+            </ConditionalShell>
+          </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   )
 }
-

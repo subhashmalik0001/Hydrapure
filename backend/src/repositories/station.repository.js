@@ -121,6 +121,10 @@ export class StationRepository {
     return memoryStations[idx];
   }
 
+  async updateStatus(id, status, extra = {}) {
+    return this.update(id, { status, ...extra });
+  }
+
   async delete(id) {
     if (!isMock) {
       try {
