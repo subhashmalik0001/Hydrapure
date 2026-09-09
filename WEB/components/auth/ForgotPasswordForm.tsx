@@ -33,27 +33,27 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="text-center py-4 space-y-6">
-        <div className="w-16 h-16 bg-[#021BFE]/10 border border-[#021BFE]/20 rounded-full flex items-center justify-center mx-auto text-[#021BFE]">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <div className="text-center py-4 space-y-5">
+        <div className="w-14 h-14 bg-[#edf8f2] border border-[#24a56f]/30 rounded-full flex items-center justify-center mx-auto text-[#18845b] shadow-sm">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
 
         <div>
-          <h3 className="text-xl font-bold text-white tracking-tight">Check your email</h3>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            If an account exists for <strong className="text-white font-mono">{email}</strong>, you will receive a secure password reset link shortly.
+          <h3 className="text-xl font-bold text-[#101820] tracking-tight">Check your email</h3>
+          <p className="text-sm text-[#53616d] mt-2 leading-relaxed">
+            If an operational account exists for <strong className="text-[#101820] font-mono">{email}</strong>, you will receive a secure password reset link shortly.
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 text-left font-mono">
-          <span className="text-[#021BFE] font-semibold">Tip:</span> Please check your inbox and spam folder. Reset links expire in 60 minutes for security.
+        <div className="p-3.5 rounded-xl bg-[#f8fafc] border border-slate-200 text-xs text-[#64748b] text-left font-mono">
+          <span className="text-[#155e75] font-semibold">Tip:</span> Please check your inbox and spam folder. Reset links expire in 60 minutes for security.
         </div>
 
         <Link
           href="/login"
-          className="inline-block w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all shadow-lg shadow-[#021BFE]/25"
+          className="inline-block w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all shadow-sm"
         >
           Return to Sign In
         </Link>
@@ -62,22 +62,22 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {error && <AuthError message={error} onDismiss={() => setError(null)} />}
 
-      <p className="text-sm text-slate-300 leading-relaxed">
-        Enter your work email address and we&apos;ll send you a secure reset link.
+      <p className="text-sm text-[#53616d] leading-relaxed">
+        Enter your work email address and we&apos;ll send you a secure verification link to reset your password.
       </p>
 
       <div className="space-y-1.5">
-        <label htmlFor="forgot-email" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
+        <label htmlFor="forgot-email" className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
           Work Email
         </label>
         <input
           id="forgot-email"
           type="email"
-          className="w-full bg-[#070A12] border border-slate-800 focus:border-[#021BFE] focus:ring-4 focus:ring-[#021BFE]/20 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-200"
-          placeholder="officer@hydrapure.gov.in"
+          className="w-full bg-white border border-[#d5dfe5] focus:border-[#155e75] focus:ring-4 focus:ring-[#155e75]/10 rounded-xl px-4 py-2.5 text-sm text-[#101820] placeholder-[#94a3b8] focus:outline-none transition-all duration-200 shadow-sm"
+          placeholder="admin@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
@@ -89,7 +89,7 @@ export function ForgotPasswordForm() {
       <button
         type="submit"
         id="forgot-submit-btn"
-        className="w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-lg shadow-[#021BFE]/25 hover:shadow-[#021BFE]/40 focus:outline-none focus:ring-4 focus:ring-[#021BFE]/30 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-md shadow-[#10190b]/15 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#10190b]/20 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         disabled={loading}
       >
         {loading ? (
@@ -105,8 +105,8 @@ export function ForgotPasswordForm() {
         )}
       </button>
 
-      <div className="pt-4 border-t border-slate-800/80 text-center text-xs text-slate-400">
-        <Link href="/login" className="text-[#021BFE] hover:text-[#38bdf8] font-semibold transition-colors">
+      <div className="pt-3 border-t border-slate-100 text-center text-xs text-[#64748b]">
+        <Link href="/login" className="text-[#155e75] hover:underline font-bold transition-colors">
           ← Back to Sign In
         </Link>
       </div>

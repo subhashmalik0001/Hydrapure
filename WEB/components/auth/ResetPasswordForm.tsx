@@ -61,23 +61,23 @@ export function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="text-center py-4 space-y-6">
-        <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-400">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <div className="text-center py-4 space-y-5">
+        <div className="w-14 h-14 bg-[#edf8f2] border border-[#24a56f]/30 rounded-full flex items-center justify-center mx-auto text-[#18845b] shadow-sm">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
 
         <div>
-          <h3 className="text-xl font-bold text-white tracking-tight">Password Reset Complete</h3>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            Your password was updated successfully. You can now sign in with your new credentials.
+          <h3 className="text-xl font-bold text-[#101820] tracking-tight">Password Reset Complete</h3>
+          <p className="text-sm text-[#53616d] mt-2 leading-relaxed">
+            Your credentials were updated successfully. You can now access your telemetry dashboard.
           </p>
         </div>
 
         <Link
           href="/login"
-          className="inline-block w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all shadow-lg shadow-[#021BFE]/25"
+          className="inline-block w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all shadow-sm"
         >
           Sign In Now
         </Link>
@@ -89,8 +89,8 @@ export function ResetPasswordForm() {
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {error && <AuthError message={error} onDismiss={() => setError(null)} />}
 
-      <p className="text-sm text-slate-300 leading-relaxed mb-2">
-        Enter a new secure password for your HydraPure account.
+      <p className="text-sm text-[#53616d] leading-relaxed mb-1">
+        Enter a new secure operational password for your HydraPure account.
       </p>
 
       <PasswordField
@@ -116,7 +116,7 @@ export function ResetPasswordForm() {
       <button
         type="submit"
         id="reset-submit-btn"
-        className="w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-lg shadow-[#021BFE]/25 hover:shadow-[#021BFE]/40 focus:outline-none focus:ring-4 focus:ring-[#021BFE]/30 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+        className="w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-md shadow-[#10190b]/15 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#10190b]/20 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed mt-3 cursor-pointer"
         disabled={loading}
       >
         {loading ? (
@@ -132,8 +132,8 @@ export function ResetPasswordForm() {
         )}
       </button>
 
-      <div className="pt-4 border-t border-slate-800/80 text-center text-xs text-slate-400">
-        <Link href="/login" className="text-[#021BFE] hover:text-[#38bdf8] font-semibold transition-colors">
+      <div className="pt-3 border-t border-slate-100 text-center text-xs text-[#64748b]">
+        <Link href="/login" className="text-[#155e75] hover:underline font-bold transition-colors">
           ← Back to Sign In
         </Link>
       </div>

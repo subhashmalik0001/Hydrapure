@@ -8,7 +8,7 @@ async function createAdmin() {
     {
       email: 'admin@gmail.com',
       password: '123456',
-      fullName: 'Demo Super Admin',
+      fullName: 'Alok Yadav',
       role: 'SUPER_ADMIN',
       district: 'Ranchi',
       block: 'Kanke',

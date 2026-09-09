@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, MapPin, Activity, Bell, FileText, Map, Settings,
-  CircleHelp, MessageSquare, ChevronDown, Presentation,
+  CircleHelp, MessageSquare, ChevronDown, Presentation, LogOut,
 } from 'lucide-react'
 import { useApp } from '@/lib/context/AppContext'
+import { useAuthContext } from '@/lib/context/AuthContext'
 import type { UserRole } from '@/lib/types'
 
 interface NavEntry {
@@ -31,6 +32,19 @@ const mainNav: NavEntry[] = [
 export default function Sidebar() {
   const pathname = usePathname()
   const { role } = useApp()
+  const { user, logout } = useAuthContext()
+
+  const displayName = user?.fullName || 'Alok Yadav'
+  const displayRole = user?.role === 'SUPER_ADMIN' || user?.role === 'ADMIN' ? 'Admin' : (user?.role || 'Admin')
+
+  // Calculate initials (e.g. Alok Yadav -> AY)
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2) || 'AY'
 
   const filteredNav = mainNav.filter(n => n.roles.includes(role))
 
@@ -71,12 +85,18 @@ export default function Sidebar() {
         <button className="nav-item"><CircleHelp /><span>Help</span></button>
         <button className="nav-item"><MessageSquare /><span>Feedback</span></button>
         <div className="sidebar-profile">
-          <div className="avatar">AY</div>
+          <div className="avatar">{initials}</div>
           <div>
-            <strong>Alok Yadav</strong>
-            <span>Admin</span>
+            <strong>{displayName}</strong>
+            <span>{displayRole}</span>
           </div>
-          <ChevronDown />
+          <button
+            onClick={() => logout()}
+            title="Sign Out"
+            className="ml-auto text-[#718092] hover:text-[#d45252] p-1 transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </aside>

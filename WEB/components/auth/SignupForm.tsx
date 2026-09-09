@@ -102,28 +102,28 @@ export function SignupForm() {
 
   if (done) {
     return (
-      <div className="text-center py-4 space-y-6">
-        <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto text-emerald-400">
-          <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+      <div className="text-center py-4 space-y-5">
+        <div className="w-14 h-14 bg-[#edf8f2] border border-[#24a56f]/30 rounded-full flex items-center justify-center mx-auto text-[#18845b] shadow-sm">
+          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
 
         <div>
-          <h3 className="text-xl font-bold text-white tracking-tight">Check your email</h3>
-          <p className="text-sm text-slate-300 mt-2 leading-relaxed">
-            We sent a verification link to <strong className="text-white font-mono">{form.email}</strong>.
-            Please verify your email address to activate your account.
+          <h3 className="text-xl font-bold text-[#101820] tracking-tight">Check your email</h3>
+          <p className="text-sm text-[#53616d] mt-2 leading-relaxed">
+            We sent an activation link to <strong className="text-[#101820] font-mono">{form.email}</strong>.
+            Please verify your work email address to activate your telemetry access.
           </p>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 text-left font-mono">
-          <span className="text-[#021BFE] font-semibold">Security Note:</span> Your account starts with default <strong className="text-slate-200">Viewer</strong> access. An administrator can elevate your operational role after identity confirmation.
+        <div className="p-3.5 rounded-xl bg-[#f8fafc] border border-slate-200 text-xs text-[#64748b] text-left font-mono">
+          <span className="text-[#155e75] font-semibold">Security Note:</span> Your account starts with default <strong className="text-[#101820]">Viewer</strong> access. An administrator will elevate your operational scope after verification.
         </div>
 
         <Link
           href="/login"
-          className="inline-block w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all"
+          className="inline-block w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm transition-all shadow-sm"
         >
           Return to Sign In
         </Link>
@@ -132,18 +132,18 @@ export function SignupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-3.5" noValidate>
       {error && <AuthError message={error} onDismiss={() => setError(null)} />}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <label htmlFor="signup-name" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <label htmlFor="signup-name" className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
             Full Name *
           </label>
           <input
             id="signup-name"
             type="text"
-            className="w-full bg-[#070A12] border border-slate-800 focus:border-[#021BFE] focus:ring-4 focus:ring-[#021BFE]/20 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-200"
+            className="w-full bg-white border border-[#d5dfe5] focus:border-[#155e75] focus:ring-4 focus:ring-[#155e75]/10 rounded-xl px-3.5 py-2 text-sm text-[#101820] placeholder-[#94a3b8] focus:outline-none transition-all duration-200 shadow-sm"
             placeholder="Alok Yadav"
             value={form.full_name}
             onChange={set('full_name')}
@@ -151,14 +151,14 @@ export function SignupForm() {
             disabled={loading}
           />
         </div>
-        <div className="space-y-1.5">
-          <label htmlFor="signup-phone" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
+        <div className="space-y-1">
+          <label htmlFor="signup-phone" className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
             Phone Number
           </label>
           <input
             id="signup-phone"
             type="tel"
-            className="w-full bg-[#070A12] border border-slate-800 focus:border-[#021BFE] focus:ring-4 focus:ring-[#021BFE]/20 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-200"
+            className="w-full bg-white border border-[#d5dfe5] focus:border-[#155e75] focus:ring-4 focus:ring-[#155e75]/10 rounded-xl px-3.5 py-2 text-sm text-[#101820] placeholder-[#94a3b8] focus:outline-none transition-all duration-200 shadow-sm"
             placeholder="+91 94310 XXXXX"
             value={form.phone}
             onChange={set('phone')}
@@ -168,15 +168,15 @@ export function SignupForm() {
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label htmlFor="signup-email" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
+      <div className="space-y-1">
+        <label htmlFor="signup-email" className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
           Work Email *
         </label>
         <input
           id="signup-email"
           type="email"
-          className="w-full bg-[#070A12] border border-slate-800 focus:border-[#021BFE] focus:ring-4 focus:ring-[#021BFE]/20 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all duration-200"
-          placeholder="officer@hydrapure.gov.in"
+          className="w-full bg-white border border-[#d5dfe5] focus:border-[#155e75] focus:ring-4 focus:ring-[#155e75]/10 rounded-xl px-3.5 py-2 text-sm text-[#101820] placeholder-[#94a3b8] focus:outline-none transition-all duration-200 shadow-sm"
+          placeholder="alok.yadav@hydrapure.gov.in"
           value={form.email}
           onChange={set('email')}
           autoComplete="email"
@@ -184,13 +184,13 @@ export function SignupForm() {
         />
       </div>
 
-      <div className="space-y-1.5">
-        <label htmlFor="signup-district" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
-          District
+      <div className="space-y-1">
+        <label htmlFor="signup-district" className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
+          Assigned District
         </label>
         <select
           id="signup-district"
-          className="w-full bg-[#070A12] border border-slate-800 focus:border-[#021BFE] focus:ring-4 focus:ring-[#021BFE]/20 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none transition-all duration-200"
+          className="w-full bg-white border border-[#d5dfe5] focus:border-[#155e75] focus:ring-4 focus:ring-[#155e75]/10 rounded-xl px-3.5 py-2 text-sm text-[#101820] focus:outline-none transition-all duration-200 shadow-sm"
           value={form.district}
           onChange={set('district')}
           disabled={loading}
@@ -204,7 +204,7 @@ export function SignupForm() {
         </select>
       </div>
 
-      <div className="space-y-1.5">
+      <div className="space-y-1">
         <PasswordField
           id="signup-password"
           label="Password *"
@@ -216,9 +216,9 @@ export function SignupForm() {
         />
 
         {form.password && (
-          <div className="space-y-2 pt-1">
+          <div className="space-y-1.5 pt-1">
             <div className="flex items-center space-x-2">
-              <div className="flex-1 h-1 bg-slate-800 rounded-full overflow-hidden flex space-x-1">
+              <div className="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden flex space-x-1">
                 <div
                   className="h-full rounded-full transition-all duration-300"
                   style={{
@@ -227,23 +227,23 @@ export function SignupForm() {
                   }}
                 />
               </div>
-              <span className="text-xs font-mono font-semibold" style={{ color: strength.color }}>
+              <span className="text-[11px] font-mono font-semibold" style={{ color: strength.color }}>
                 {strength.label}
               </span>
             </div>
 
             {/* Password requirements indicators */}
-            <div className="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-400">
-              <span className={reqs.minLength ? 'text-emerald-400' : 'text-slate-500'}>
+            <div className="grid grid-cols-2 gap-1 text-[10px] font-mono text-[#718092]">
+              <span className={reqs.minLength ? 'text-[#18845b] font-bold' : 'text-[#94a3b8]'}>
                 {reqs.minLength ? '✓' : '○'} Min 8 characters
               </span>
-              <span className={reqs.hasUpper ? 'text-emerald-400' : 'text-slate-500'}>
+              <span className={reqs.hasUpper ? 'text-[#18845b] font-bold' : 'text-[#94a3b8]'}>
                 {reqs.hasUpper ? '✓' : '○'} Uppercase letter
               </span>
-              <span className={reqs.hasLower ? 'text-emerald-400' : 'text-slate-500'}>
+              <span className={reqs.hasLower ? 'text-[#18845b] font-bold' : 'text-[#94a3b8]'}>
                 {reqs.hasLower ? '✓' : '○'} Lowercase letter
               </span>
-              <span className={reqs.hasNumber ? 'text-emerald-400' : 'text-slate-500'}>
+              <span className={reqs.hasNumber ? 'text-[#18845b] font-bold' : 'text-[#94a3b8]'}>
                 {reqs.hasNumber ? '✓' : '○'} Number
               </span>
             </div>
@@ -264,7 +264,7 @@ export function SignupForm() {
       <button
         type="submit"
         id="signup-submit-btn"
-        className="w-full bg-[#021BFE] hover:bg-[#0114C7] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-lg shadow-[#021BFE]/25 hover:shadow-[#021BFE]/40 focus:outline-none focus:ring-4 focus:ring-[#021BFE]/30 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+        className="w-full bg-[#10190b] hover:bg-[#1e2e17] text-white font-semibold rounded-xl py-3 px-4 text-sm shadow-md shadow-[#10190b]/15 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#10190b]/20 transition-all duration-200 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed mt-3 cursor-pointer"
         disabled={loading}
       >
         {loading ? (
@@ -276,13 +276,13 @@ export function SignupForm() {
             <span>Creating Account...</span>
           </>
         ) : (
-          <span>Create Account</span>
+          <span>Register Account</span>
         )}
       </button>
 
-      <div className="pt-4 border-t border-slate-800/80 text-center text-xs text-slate-400">
+      <div className="pt-3 border-t border-slate-100 text-center text-xs text-[#64748b]">
         Already have an account?{' '}
-        <Link href="/login" className="text-[#021BFE] hover:text-[#38bdf8] font-semibold transition-colors">
+        <Link href="/login" className="text-[#155e75] hover:underline font-bold transition-colors">
           Sign in
         </Link>
       </div>

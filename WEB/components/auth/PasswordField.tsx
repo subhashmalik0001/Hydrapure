@@ -13,7 +13,7 @@ export function PasswordField({ label, error, id, className = '', ...props }: Pa
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono">
+        <label htmlFor={id} className="block text-[11px] font-bold uppercase tracking-wider text-[#697782] font-mono">
           {label}
         </label>
       </div>
@@ -22,13 +22,13 @@ export function PasswordField({ label, error, id, className = '', ...props }: Pa
           {...props}
           id={id}
           type={visible ? 'text' : 'password'}
-          className={`w-full bg-[#070A12] border ${
-            error ? 'border-red-500/60 focus:ring-red-500/30' : 'border-slate-800 focus:border-[#021BFE] focus:ring-[#021BFE]/20'
-          } rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-4 transition-all duration-200 pr-11 ${className}`}
+          className={`w-full bg-white border ${
+            error ? 'border-[#d45252] focus:ring-[#d45252]/15' : 'border-[#d5dfe5] focus:border-[#155e75] focus:ring-[#155e75]/10'
+          } rounded-xl px-4 py-2.5 text-sm text-[#101820] placeholder-[#94a3b8] focus:outline-none focus:ring-4 transition-all duration-200 pr-11 shadow-sm ${className}`}
         />
         <button
           type="button"
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors p-1 rounded-md"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#718092] hover:text-[#101820] transition-colors p-1 rounded-md"
           onClick={() => setVisible((v) => !v)}
           tabIndex={-1}
           aria-label={visible ? 'Hide password' : 'Show password'}
@@ -45,7 +45,7 @@ export function PasswordField({ label, error, id, className = '', ...props }: Pa
           )}
         </button>
       </div>
-      {error && <p className="text-xs text-red-400 font-medium pl-1">{error}</p>}
+      {error && <p className="text-xs text-[#d45252] font-medium pl-1">{error}</p>}
     </div>
   )
 }
