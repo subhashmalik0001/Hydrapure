@@ -77,7 +77,7 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
 
         {/* Bottom Security Footer */}
         <div className="relative z-10 text-xs text-slate-500 font-mono">
-          © {new Date().getFullYear()} HydraPure Smart Infrastructure. All rights reserved.
+          © 2026 HydraPure Smart Infrastructure. All rights reserved.
         </div>
       </div>
 
